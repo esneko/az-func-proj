@@ -26,7 +26,7 @@ public class TimerTrigger
     }
 
     [FunctionName("TimerTrigger")]
-    public void Run(
+    public async void Run(
         [TimerTrigger("0 */1 * * * *")] TimerInfo myTimer,
         ILogger log)
     {
