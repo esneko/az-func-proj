@@ -14,6 +14,23 @@ using Microsoft.Extensions.Logging;
 
 namespace az_func_proj;
 
+public class Entry
+{
+    public string API;
+    public string Description;
+    public string Auth;
+    public bool HTTPS;
+    public string Cors;
+    public string Link;
+    public string Category;
+}
+
+public class Payload
+{
+    public number count;
+    public List<Entry> entries;
+}
+
 public class TimerTrigger
 {
     private readonly HttpClient _client;
@@ -32,8 +49,8 @@ public class TimerTrigger
         log.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
         try
         {
-            var response = await _client.GetFromJsonAsync<string>("https://api.publicapis.org/random?auth=null");
-            log.LogInformation($"C# Timer trigger function called the API: {response}");
+            var response = await _client.GetFromJsonAsync<Payload>("https://api.publicapis.org/random?auth=null");
+            log.LogInformation($"C# Timer trigger function called the API: {response.count}");
         }
         catch (HttpRequestException ex)
         {
