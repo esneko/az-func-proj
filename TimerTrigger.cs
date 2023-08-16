@@ -54,7 +54,7 @@ public class TimerTrigger
             var response = await _client.GetAsync("https://api.publicapis.org/random?auth=null");
             response.EnsureSuccessStatusCode();
 
-            var body = await response.Content.ReadAsStringAsync<dynamic>();
+            var body = await response.Content.ReadAsStringAsync();
             log.LogInformation($"C# Timer trigger function called the API: {body}");
         }
         catch (HttpRequestException ex)
