@@ -33,9 +33,8 @@ public class TimerTrigger
         log.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
         try
         {
-            var response = await _client.GetAsync("https://api.publicapis.org/"); // random?auth=null
-            var message = _service.GetMessage();
-            log.LogInformation($"C# Timer trigger function called the API: {message}");
+            var response = await _client.GetFromJsonAsync("https://api.publicapis.org/random?auth=null");
+            log.LogInformation($"C# Timer trigger function called the API: {response}");
         }
         catch (System.Exception)
         {
