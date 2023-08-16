@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -27,7 +28,7 @@ public class Entry
 
 public class Payload
 {
-    public number count;
+    public int count;
     public List<Entry> entries;
 }
 
