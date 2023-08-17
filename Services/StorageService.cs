@@ -23,7 +23,7 @@ public class StorageService : IStorageService
   public async Task<bool> SaveFile(string blobName, string blobData)
   {
     BlobContainerClient containerClient = _client.GetBlobContainerClient("azfuncst");
-    // BlobClient blobClient = containerClient.GetBlobClient(blobName);
+    BlobClient blobClient = containerClient.GetBlobClient(blobName);
 
     // using (MemoryStream ms = new MemoryStream(Encoding.UTF8.GetBytes(blobData)))
     // {
