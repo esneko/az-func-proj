@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 namespace AzFuncProj.Storage.Models;
@@ -26,5 +28,5 @@ public class Entry
   public string Category { get; set; }
 
   [JsonIgnore]
-  public DateTime? Date { get; init; }
+  public DateTime? LastModified { get; init; } = DateTime.Now;
 }
