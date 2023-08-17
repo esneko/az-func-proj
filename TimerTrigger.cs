@@ -24,8 +24,8 @@ public class TimerTrigger
 
     public TimerTrigger(HttpClient httpClient, IStorageService storageService)
     {
-        this._client = httpClient;
-        this._storage = storageService;
+        _client = httpClient;
+        _storage = storageService;
     }
 
     [FunctionName("TimerTrigger")]
@@ -36,14 +36,17 @@ public class TimerTrigger
         log.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
         try
         {
-            // var response = await _client.GetFromJsonAsync<Payload>("https://api.publicapis.org/random?auth=null");
-            var response = await _client.GetAsync("https://api.publicapis.org/random?auth=null");
+            var response = await _client.GetAsync("random?auth=null");
             var data = await response.Content.ReadAsStringAsync();
-            _storage.SaveFile(data);
 
-            Payload payload = JsonSerializer.Deserialize<Payload>(data);
+            string id = Guid.NewGuid().ToString();
+            await _storage.SaveFile(id, data);
+
+            var payload = JsonSerializer.Deserialize<Payload>(data);
             if (payload.count > 0)
+            {
                 _storage.SaveData(payload.entries);
+            }
 
             log.LogInformation($"C# Timer trigger function called the API: {data}");
         }
