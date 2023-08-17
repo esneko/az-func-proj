@@ -19,13 +19,13 @@ namespace AzFuncProj;
 
 public class TimerTrigger
 {
-    private readonly HttpClient _client;
-    private readonly IStorageService _storage;
+    private HttpClient _client;
+    private IStorageService _storage;
 
     public TimerTrigger(HttpClient httpClient, IStorageService storageService)
     {
-        this._client = httpClient;
-        this._storage = storageService;
+        _client = httpClient;
+        _storage = storageService;
     }
 
     [FunctionName("TimerTrigger")]
