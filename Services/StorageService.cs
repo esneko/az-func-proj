@@ -30,7 +30,7 @@ public class StorageService : IStorageService
     //   await blobClient.UploadAsync(ms);
     // }
 
-    // await blobClient.UploadAsync(BinaryData.FromString(blobData), overwrite: true);
+    await blobClient.UploadAsync(BinaryData.FromString(blobData), overwrite: true);
 
     return true;
   }
