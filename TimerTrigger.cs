@@ -13,17 +13,18 @@ using Microsoft.Extensions.Configuration;
 // using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using AzFuncProj.Storage.Service;
+// using AzFuncProj.Storage.Models;
 
 namespace AzFuncProj;
 
 public class TimerTrigger
 {
-    private readonly HttpClient _client;
+    private readonly IHttpClientFactory _client;
     private readonly IStorageService _storage;
 
-    public TimerTrigger(HttpClient httpClient, IStorageService storageService)
+    public TimerTrigger(IHttpClientFactory httpClient, IStorageService storageService)
     {
-        this._client = httpClient;
+        this._httpClient = httpClient;
         this._storage = storageService;
     }
 
@@ -35,8 +36,9 @@ public class TimerTrigger
         log.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
         try
         {
+            var client = _httpClient.CreateClient("TestClientController");
             // var response = await _client.GetFromJsonAsync<Payload>("https://api.publicapis.org/random?auth=null");
-            var response = await _client.GetAsync("https://api.publicapis.org/random?auth=null");
+            var response = await client.GetAsync("https://api.publicapis.org/random?auth=null");
             var payload = await response.Content.ReadAsStringAsync();
             _storage.SaveFile(payload);
 
