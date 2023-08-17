@@ -1,6 +1,6 @@
-using System.Net.Http;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Http;
 using AzFuncProj;
 using AzFuncProj.Storage.Service;
 
@@ -12,7 +12,7 @@ public class Startup : FunctionsStartup
 {
   public override void Configure(IFunctionsHostBuilder builder)
   {
-    builder.Services.AddHttpClient();
+    builder.Services.AddHttpClient<TimerTrigger>();
     builder.Services.AddTransient<IStorageService, StorageService>();
   }
 }
