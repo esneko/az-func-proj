@@ -5,41 +5,26 @@ using System.Net.Http;
 // using System.Net.Http.Json;
 // using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-// using Microsoft.Azure.Functions.Extensions;
+// using Microsoft.AspNetCore.Http;
+// using Microsoft.Azure.Functions.Extensions; 
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+// using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using AzFuncProj.Storage.Service;
 
-namespace az_func_proj;
-
-// public class Entry
-// {
-//     public string API;
-//     public string Description;
-//     public string Auth;
-//     public bool HTTPS;
-//     public string Cors;
-//     public string Link;
-//     public string Category;
-// }
-
-// public class Payload
-// {
-//     public int count;
-//     public List<Entry> entries;
-// }
+namespace AzFuncProj;
 
 public class TimerTrigger
 {
     private readonly HttpClient _client;
+    private readonly IStorageService _storage;
 
-    public TimerTrigger(HttpClient httpClient) //, IStorageService storage
+    public TimerTrigger(HttpClient httpClient, IStorageService storageService)
     {
         this._client = httpClient;
-        // this._storage = storage;
+        this._storage = storageService;
     }
 
     [FunctionName("TimerTrigger")]
@@ -52,10 +37,14 @@ public class TimerTrigger
         {
             // var response = await _client.GetFromJsonAsync<Payload>("https://api.publicapis.org/random?auth=null");
             var response = await _client.GetAsync("https://api.publicapis.org/random?auth=null");
-            response.EnsureSuccessStatusCode();
+            var payload = await response.Content.ReadAsStringAsync();
+            _storage.SaveFile(payload);
 
-            var body = await response.Content.ReadAsStringAsync();
-            log.LogInformation($"C# Timer trigger function called the API: {body}");
+            // Payload payload = JsonSerializer.Deserialize<Payload>(payload);
+            // if (payload?.count > 0)
+            //     _storage.SaveData(payload.entries);
+
+            log.LogInformation($"C# Timer trigger function called the API: {payload}");
         }
         catch (HttpRequestException ex)
         {
