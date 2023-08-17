@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Text;
 using System.Threading.Tasks;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
@@ -26,7 +27,7 @@ public class StorageService : IStorageService
     BlobContainerClient containerClient = _client.GetBlobContainerClient("azfuncst");
     BlobClient blobClient = containerClient.GetBlobClient(blobName);
 
-    using (MemoryStream ms = new MemoryStream(Encoding.UTF8.GetBytes(data)))
+    using (MemoryStream ms = new MemoryStream(Encoding.UTF8.GetBytes(blobData)))
     {
       await blobClient.UploadAsync(ms);
     }
