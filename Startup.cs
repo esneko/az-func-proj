@@ -1,7 +1,6 @@
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Http;
-using System.Net.Http;
 using AzFuncProj;
 using AzFuncProj.Storage.Service;
 

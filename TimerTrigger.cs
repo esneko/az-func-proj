@@ -5,15 +5,15 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading.Tasks;
-// using Microsoft.AspNetCore.Http;
-// using Microsoft.Azure.Functions.Extensions; 
+using Microsoft.AspNetCore.Http;
+using Microsoft.Azure.Functions.Extensions;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using AzFuncProj.Storage.Service;
-// using AzFuncProj.Storage.Models;
+using AzFuncProj.Storage.Models;
 
 namespace AzFuncProj;
 
@@ -38,14 +38,14 @@ public class TimerTrigger
         {
             // var response = await _client.GetFromJsonAsync<Payload>("https://api.publicapis.org/random?auth=null");
             var response = await _client.GetAsync("https://api.publicapis.org/random?auth=null");
-            var payload = await response.Content.ReadAsStringAsync();
-            _storage.SaveFile(payload);
+            var data = await response.Content.ReadAsStringAsync();
+            _storage.SaveFile(data);
 
-            Payload payload = JsonSerializer.Deserialize<Payload>(payload);
-            // if (payload?.count > 0)
-            //     _storage.SaveData(payload.entries);
+            Payload payload = JsonSerializer.Deserialize<Payload>(data);
+            if (payload.count > 0)
+                _storage.SaveData(payload.entries);
 
-            log.LogInformation($"C# Timer trigger function called the API: {payload}");
+            log.LogInformation($"C# Timer trigger function called the API: {data}");
         }
         catch (HttpRequestException ex)
         {
