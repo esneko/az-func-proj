@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net.Http;
+// using System.Net.Http;
 // using System.Net.Http.Json;
-// using System.Text.Json;
+using System.Text.Json;
 using System.Threading.Tasks;
 // using Microsoft.AspNetCore.Http;
 // using Microsoft.Azure.Functions.Extensions; 
@@ -38,17 +38,27 @@ public class TimerTrigger
             // var response = await _client.GetFromJsonAsync<Payload>("https://api.publicapis.org/random?auth=null");
             var response = await _client.GetAsync("https://api.publicapis.org/random?auth=null");
             var payload = await response.Content.ReadAsStringAsync();
-            bool ok = _storage.SaveFile(payload);
+            _storage.SaveFile(payload);
 
             // Payload payload = JsonSerializer.Deserialize<Payload>(payload);
             // if (payload?.count > 0)
             //     _storage.SaveData(payload.entries);
 
-            if (ok) log.LogInformation($"C# Timer trigger function called the API: {payload}");
+            log.LogInformation($"C# Timer trigger function called the API: {payload}");
         }
         catch (HttpRequestException ex)
         {
-            log.LogInformation($"C# Timer trigger function failed to call the API: {ex.Message}");
+            log.LogInformation($"C# Timer trigger function failed: {ex.Message}");
+            throw;
+        }
+        catch (NotSupportedException)
+        {
+            log.LogInformation($"C# Timer trigger function failed: The content type is not supported.");
+            throw;
+        }
+        catch (JsonException)
+        {
+            log.LogInformation($"C# Timer trigger function failed: Invalid JSON.");
             throw;
         }
     }
