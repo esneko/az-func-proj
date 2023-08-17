@@ -13,7 +13,7 @@ public class Startup : FunctionsStartup
 {
   public override void Configure(IFunctionsHostBuilder builder)
   {
-    builder.Services.AddHttpClient<TimerTrigger>(c => c.BaseAddress = new Uri("https://api.publicapis.org/"));
+    builder.Services.AddHttpClient<TimerTrigger>();
     builder.Services.AddTransient<IStorageService, StorageService>();
   }
 }
