@@ -38,13 +38,13 @@ public class TimerTrigger
             // var response = await _client.GetFromJsonAsync<Payload>("https://api.publicapis.org/random?auth=null");
             var response = await _client.GetAsync("https://api.publicapis.org/random?auth=null");
             var payload = await response.Content.ReadAsStringAsync();
-            _storage.SaveFile(payload);
+            bool ok = _storage.SaveFile(payload);
 
             // Payload payload = JsonSerializer.Deserialize<Payload>(payload);
             // if (payload?.count > 0)
             //     _storage.SaveData(payload.entries);
 
-            log.LogInformation($"C# Timer trigger function called the API: {payload}");
+            if (ok) log.LogInformation($"C# Timer trigger function called the API: {payload}");
         }
         catch (HttpRequestException ex)
         {

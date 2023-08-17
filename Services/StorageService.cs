@@ -6,7 +6,6 @@ public class StorageService : IStorageService
 {
   public bool SaveFile(string payload)
   {
-    log.LogInformation($"C# Timer trigger function saved the payload: {payload}");
     return true;
   }
 
