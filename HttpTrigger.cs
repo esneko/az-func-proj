@@ -41,7 +41,7 @@ public class HttpTrigger
             return new OkObjectResult(entries);
         }
 
-        // string id = req.Query["id"];
+        string id = req.Query["id"];
 
         return new OkObjectResult($"Todo: fetch the blob with id: {id}");
     }
