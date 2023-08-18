@@ -24,7 +24,7 @@ public class StorageService : IStorageService
 
   public async Task<bool> SaveFile(string blobName, string blobData)
   {
-    BlobContainerClient containerClient = _client.GetBlobContainerClient(_containerName");
+    BlobContainerClient containerClient = _client.GetBlobContainerClient(_containerName);
     BlobClient blobClient = containerClient.GetBlobClient(blobName);
 
     await blobClient.UploadAsync(BinaryData.FromString(blobData), overwrite: true);
