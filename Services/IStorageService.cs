@@ -8,4 +8,5 @@ public interface IStorageService
 {
   Task<bool> UploadFile(string blobName, string blobData);
   Task<bool> AddEntities(string id, List<Entry> entries);
+  Task<IEnumerable<Entry>> ListEntities(string? filter);
 }

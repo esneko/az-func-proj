@@ -3,7 +3,6 @@ using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
 using Azure;
 using Azure.Data.Tables;
@@ -52,5 +51,19 @@ public class StorageService : IStorageService
     }
 
     return true;
+  }
+
+  public async Task<IEnumerable<Entry>> ListEntities(string? filter = null)
+  {
+    var tableClient = new TableClient(_connectionString, _tableName);
+    AsyncPageable<Entry> queryResults = tableClient.QueryAsync<Entry>(filter: filter, maxPerPage: 100);
+
+    var results = new List<Entry>();
+    await foreach (Page<Entry> page in queryResults.AsPages())
+    {
+      results.AddRange(page.Values);
+    }
+
+    return results.AsEnumerable();
   }
 }
