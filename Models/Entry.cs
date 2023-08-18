@@ -1,11 +1,27 @@
 using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using Azure;
+using Azure.Data.Tables;
 
 namespace AzFuncProj.Storage.Models;
 
-public class Entry
+public class Entry : ITableEntity
 {
+  public Entry() { }
+
+  [JsonIgnore]
+  public string? PartitionKey { get; set; }
+
+  [JsonIgnore]
+  public string? RowKey { get; set; }
+
+  [JsonIgnore]
+  public DateTimeOffset? Timestamp { get; set; }
+
+  [JsonIgnore]
+  public ETag ETag { get; set; }
+
   [JsonPropertyName("api")]
   public string API { get; set; }
 
@@ -26,7 +42,4 @@ public class Entry
 
   [JsonPropertyName("category")]
   public string Category { get; set; }
-
-  [JsonIgnore]
-  public DateTime? LastModified { get; init; } = DateTime.Now;
 }

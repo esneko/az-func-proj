@@ -6,6 +6,6 @@ namespace AzFuncProj.Storage.Service;
 
 public interface IStorageService
 {
-  Task<bool> SaveFile(string blobName, string blobData);
-  bool SaveData(List<Entry> entries);
+  Task<bool> UploadFile(string blobName, string blobData);
+  Task<bool> AddEntities(string id, List<Entry> entries);
 }

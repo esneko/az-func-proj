@@ -33,36 +33,36 @@ public class TimerTrigger
         [TimerTrigger("0 */1 * * * *")] TimerInfo myTimer,
         ILogger log)
     {
-        log.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
+        log.LogInformation($"C# TimerTrigger function executed at: {DateTime.Now}");
         try
         {
             var response = await _client.GetAsync("https://api.publicapis.org/random?auth=null");
             var data = await response.Content.ReadAsStringAsync();
 
             string id = Guid.NewGuid().ToString();
-            await _storage.SaveFile(id, data);
+            await _storage.UploadFile(id, data);
 
             var payload = JsonSerializer.Deserialize<Payload>(data);
             if (payload.count > 0)
             {
-                _storage.SaveData(payload.entries);
+                _storage.AddEntities(id, payload.entries);
             }
 
-            log.LogInformation($"C# Timer trigger function called the API: {data}");
+            log.LogInformation($"C# TimerTrigger function called the API: {data}");
         }
         catch (HttpRequestException ex)
         {
-            log.LogInformation($"C# Timer trigger function failed: {ex.Message}");
+            log.LogInformation($"Error: {ex.Message}");
             throw;
         }
         catch (NotSupportedException)
         {
-            log.LogInformation($"C# Timer trigger function failed: The content type is not supported.");
+            log.LogInformation($"Error: The content type is not supported.");
             throw;
         }
         catch (JsonException)
         {
-            log.LogInformation($"C# Timer trigger function failed: Invalid JSON.");
+            log.LogInformation($"Error: Invalid JSON.");
             throw;
         }
     }
