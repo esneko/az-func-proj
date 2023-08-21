@@ -9,7 +9,7 @@
         "/property:GenerateFullPaths=true",
         "/consoleloggerparameters:NoSummary"
       ],
-      "type": "process",
+      "type": "shell",
       "problemMatcher": "$msCompile"
     },
     {
@@ -20,7 +20,7 @@
         "/property:GenerateFullPaths=true",
         "/consoleloggerparameters:NoSummary"
       ],
-      "type": "process",
+      "type": "shell",
       "dependsOn": "clean (functions)",
       "group": {
         "kind": "build",
@@ -38,7 +38,7 @@
         "/property:GenerateFullPaths=true",
         "/consoleloggerparameters:NoSummary"
       ],
-      "type": "process",
+      "type": "shell",
       "problemMatcher": "$msCompile"
     },
     {
@@ -51,7 +51,7 @@
         "/property:GenerateFullPaths=true",
         "/consoleloggerparameters:NoSummary"
       ],
-      "type": "process",
+      "type": "shell",
       "dependsOn": "clean release (functions)",
       "problemMatcher": "$msCompile"
     },
@@ -59,7 +59,7 @@
       "type": "func",
       "dependsOn": "build (functions)",
       "options": {
-        "cwd": "${workspaceFolder}/bin/Debug/net6.0"
+        "cwd": "${workspaceFolder}/bin/Debug/net7.0"
       },
       "command": "host start",
       "isBackground": true,

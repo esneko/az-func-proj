@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Extensions.Http;
-using Microsoft.AspNetCore.Http;
+using Microsoft.Azure.Functions.Extensions;
+using Microsoft.Azure.Functions.Worker;
+using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -19,30 +19,39 @@ namespace AzFuncProj;
 public class HttpTrigger
 {
     private IStorageService _storage;
+    private readonly ILogger _logger;
 
-    public HttpTrigger(IStorageService storageService)
+    public HttpTrigger(IStorageService storageService, ILoggerFactory loggerFactory)
     {
         _storage = storageService;
+        _logger = loggerFactory.CreateLogger<TimerTrigger>();
     }
 
-    [FunctionName("HttpTrigger")]
-    public async Task<IActionResult> Run(
-        [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
-        ILogger log)
+    [Function(nameof(HttpTrigger))]
+    public async Task<HttpResponseData> Run(
+        [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequestData req)
     {
-        log.LogInformation($"C# HttpTrigger function executed at: {DateTime.Now}");
+        _logger.LogInformation($"C# HttpTrigger function executed at: {DateTime.Now}");
+
+        var response = req.CreateResponse(HttpStatusCode.OK);
 
         string partitionKey = req.Query["pk"];
         if (!string.IsNullOrEmpty(partitionKey))
         {
-            var entities = await _storage.ListEntities($"PartitionKey eq '{partitionKey}'");
+            var entities = await _storage.ListEntities<Entry>($"PartitionKey eq '{partitionKey}'");
             var entries = JsonSerializer.Serialize<List<Entry>>(entities.ToList());
 
-            return new OkObjectResult(entries);
+            response.Headers.Add("Content-Type", "text/json; charset=utf-8");
+            response.WriteString(entries);
+
+            return response;
         }
 
         string id = req.Query["id"];
 
-        return new OkObjectResult($"Todo: fetch the blob with id: {id}");
+        response.Headers.Add("Content-Type", "text/html; charset=utf-8");
+        response.WriteString($"Todo: fetch the blob with id: {id}");
+
+        return response;
     }
 }
