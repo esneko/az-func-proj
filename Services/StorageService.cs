@@ -44,7 +44,7 @@ public class StorageService : IStorageService
 
     foreach (var entry in entries)
     {
-      entry.PartitionKey = "pk"; // DateTime.Now;
+      entry.PartitionKey = DateOnly.FromDateTime(DateTime.Now).ToString("O"); // DateTimeOffset.UtcNow.ToUnixTimeSeconds()
       entry.RowKey = id;
 
       await tableClient.AddEntityAsync(entry);
@@ -53,13 +53,13 @@ public class StorageService : IStorageService
     return true;
   }
 
-  public async Task<IEnumerable<Entry>> ListEntities(string? filter = null)
+  public async Task<IEnumerable<T>> ListEntities<T>(string? filter = null) where T : class, ITableEntity
   {
     var tableClient = new TableClient(_connectionString, _tableName);
-    AsyncPageable<Entry> queryResults = tableClient.QueryAsync<Entry>(filter: filter, maxPerPage: 100);
+    AsyncPageable<T> queryResults = tableClient.QueryAsync<T>(filter: filter, maxPerPage: 100);
 
-    var results = new List<Entry>();
-    await foreach (Page<Entry> page in queryResults.AsPages())
+    var results = new List<T>();
+    await foreach (Page<T> page in queryResults.AsPages())
     {
       results.AddRange(page.Values);
     }
