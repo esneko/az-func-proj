@@ -44,7 +44,8 @@ public class TimerTrigger
             string id = Guid.NewGuid().ToString();
             await _storage.UploadFile(id, data);
 
-            var payload = JsonSerializer.Deserialize<Payload>(data);
+            var span = new ReadOnlySpan<byte>(data);
+            var payload = JsonSerializer.Deserialize<Payload>(span);
             if (payload.count > 0)
             {
                 _storage.AddEntities(id, payload.entries);

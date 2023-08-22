@@ -53,7 +53,7 @@ public class StorageService : IStorageService
     return true;
   }
 
-  public async Task<IEnumerable<T>> ListEntities<T>(string? filter = null) where T : class, ITableEntity
+  public async Task<List<T>> ListEntities<T>(string? filter = null) where T : class, ITableEntity
   {
     var tableClient = new TableClient(_connectionString, _tableName);
     AsyncPageable<T> queryResults = tableClient.QueryAsync<T>(filter: filter, maxPerPage: 100);
@@ -64,6 +64,6 @@ public class StorageService : IStorageService
       results.AddRange(page.Values);
     }
 
-    return results.AsEnumerable();
+    return results;
   }
 }

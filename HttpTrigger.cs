@@ -38,11 +38,11 @@ public class HttpTrigger
         string partitionKey = req.Query["pk"];
         if (!string.IsNullOrEmpty(partitionKey))
         {
-            var entities = await _storage.ListEntities<Entry>($"PartitionKey eq '{partitionKey}'");
-            var entries = JsonSerializer.Serialize<List<Entry>>(entities.ToList());
+            var entries = await _storage.ListEntities<Entry>($"PartitionKey eq '{partitionKey}'");
+            var data = JsonSerializer.Serialize<List<Entry>>(entries);
 
             response.Headers.Add("Content-Type", "text/json; charset=utf-8");
-            response.WriteString(entries);
+            response.WriteString(data);
 
             return response;
         }

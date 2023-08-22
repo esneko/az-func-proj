@@ -28,13 +28,13 @@ public class Entry : ITableEntity
   [JsonPropertyName("description")]
   public string Description { get; set; }
 
-  [JsonPropertyName("auth")]
+  [JsonIgnore]
   public string Auth { get; set; }
 
-  [JsonPropertyName("https")]
+  [JsonIgnore]
   public bool HTTPS { get; set; }
 
-  [JsonPropertyName("cors")]
+  [JsonIgnore]
   public string Cors { get; set; }
 
   [JsonPropertyName("link")]
