@@ -48,12 +48,12 @@ public class StorageService : IStorageService
     {
       PartitionKey = DateOnly.FromDateTime(DateTime.Now).ToString("O"), // DateTimeOffset.UtcNow.ToUnixTimeSeconds()
       RowKey = id,
-      API = "public",
-      Link = "www",
-      Description = "test",
-      Category = "abc",
-      Auth = "none",
-      Cors = "*",
+      API = f.API,
+      Link = "",
+      Description = "",
+      Category = "",
+      Auth = "",
+      Cors = "unknown",
       HTTPS = true
     })));
 
