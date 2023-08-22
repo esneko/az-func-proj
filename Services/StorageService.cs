@@ -44,17 +44,17 @@ public class StorageService : IStorageService
 
     List<TableTransactionAction> addEntityBatch = new List<TableTransactionAction>();
 
-    addEntityBatch.AddRange(entities.Select(f => new TableTransactionAction(TableTransactionActionType.Add, new Entry
+    addEntityBatch.AddRange(entities.Select(f => new TableTransactionAction(TableTransactionActionType.Add, new Entity
     {
       PartitionKey = DateOnly.FromDateTime(DateTime.Now).ToString("O"), // DateTimeOffset.UtcNow.ToUnixTimeSeconds()
       RowKey = id,
       API = f.API,
-      Link = "",
-      Description = "",
-      Category = "",
-      Auth = "",
-      Cors = "unknown",
-      HTTPS = true
+      Description = f.Description,
+      Auth = f.Auth,
+      HTTPS = f.HTTPS,
+      Cors = f.Cors,
+      Link = f.Link,
+      Category = f.Category
     })));
 
     Response<IReadOnlyList<Response>> response = await tableClient.SubmitTransactionAsync(addEntityBatch);
