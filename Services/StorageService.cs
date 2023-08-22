@@ -38,22 +38,31 @@ public class StorageService : IStorageService
     return true;
   }
 
-  public async Task<bool> AddEntities(string id, List<Entry> entries)
+  public async Task<bool> AddEntities(string id, List<Entry> entities)
   {
     var tableClient = new TableClient(_connectionString, _tableName);
 
-    foreach (var entry in entries)
-    {
-      entry.PartitionKey = DateOnly.FromDateTime(DateTime.Now).ToString("O"); // DateTimeOffset.UtcNow.ToUnixTimeSeconds()
-      entry.RowKey = id;
+    List<TableTransactionAction> addEntityBatch = new List<TableTransactionAction>();
 
-      await tableClient.AddEntityAsync(entry);
-    }
+    addEntityBatch.AddRange(entities.Select(f => new TableTransactionAction(TableTransactionActionType.Add, new Entity
+    {
+      PartitionKey = DateOnly.FromDateTime(DateTime.Now).ToString("O"), // DateTimeOffset.UtcNow.ToUnixTimeSeconds()
+      RowKey = id,
+      API = f.API,
+      Description = f.Description,
+      Auth = f.Auth,
+      HTTPS = f.HTTPS,
+      Cors = f.Cors,
+      Link = f.Link,
+      Category = f.Category
+    })));
+
+    Response<IReadOnlyList<Response>> response = await tableClient.SubmitTransactionAsync(addEntityBatch);
 
     return true;
   }
 
-  public async Task<IEnumerable<T>> ListEntities<T>(string? filter = null) where T : class, ITableEntity
+  public async Task<List<T>> ListEntities<T>(string? filter = null) where T : class, ITableEntity
   {
     var tableClient = new TableClient(_connectionString, _tableName);
     AsyncPageable<T> queryResults = tableClient.QueryAsync<T>(filter: filter, maxPerPage: 100);
@@ -64,6 +73,6 @@ public class StorageService : IStorageService
       results.AddRange(page.Values);
     }
 
-    return results.AsEnumerable();
+    return results;
   }
 }
