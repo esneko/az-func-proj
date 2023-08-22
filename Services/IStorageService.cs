@@ -8,6 +8,6 @@ namespace AzFuncProj.Storage.Service;
 public interface IStorageService
 {
   Task<bool> UploadFile(string blobName, string blobData);
-  Task<bool> AddEntities(string id, List<Entry> entries);
-  Task<IEnumerable<T>> ListEntities<T>(string? filter) where T : class, ITableEntity;
+  Task<bool> AddEntities(string id, List<Entry> entities);
+  Task<List<T>> ListEntities<T>(string? filter) where T : class, ITableEntity;
 }
