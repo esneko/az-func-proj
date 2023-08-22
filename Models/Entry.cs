@@ -10,9 +10,11 @@ public class Entry : ITableEntity
 {
   public Entry() { }
 
-  public string? PartitionKey { get; set; }
-
+  [JsonPropertyName("id")]
   public string? RowKey { get; set; }
+
+  [JsonPropertyName("date")]
+  public string? PartitionKey { get; set; }
 
   [JsonIgnore]
   public DateTimeOffset? Timestamp { get; set; }
@@ -24,20 +26,20 @@ public class Entry : ITableEntity
   public string API { get; set; }
 
   [JsonPropertyName("description")]
-  public string? Description { get; set; }
+  public string Description { get; set; }
 
   [JsonPropertyName("auth")]
-  public string? Auth { get; set; }
+  public string Auth { get; set; }
 
   [JsonPropertyName("https")]
-  public bool? HTTPS { get; set; }
+  public bool HTTPS { get; set; }
 
   [JsonPropertyName("cors")]
-  public string? Cors { get; set; }
+  public string Cors { get; set; }
 
   [JsonPropertyName("link")]
   public string Link { get; set; }
 
   [JsonPropertyName("category")]
-  public string? Category { get; set; }
+  public string Category { get; set; }
 }

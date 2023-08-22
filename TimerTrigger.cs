@@ -50,7 +50,7 @@ public class TimerTrigger
                 _storage.AddEntities(id, payload.entries);
             }
 
-            _logger.LogInformation($"C# TimerTrigger function called the API: {data}");
+            _logger.LogInformation($"C# TimerTrigger function called the API: {payload.count} {payload.entries}");
         }
         catch (HttpRequestException ex)
         {
