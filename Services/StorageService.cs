@@ -38,17 +38,21 @@ public class StorageService : IStorageService
     return true;
   }
 
-  public async Task<bool> AddEntities(string id, List<Entry> entries)
+  public async Task<bool> AddEntities<T>(string id, List<T> entities) where T : class, ITableEntity
   {
     var tableClient = new TableClient(_connectionString, _tableName);
 
-    foreach (var entry in entries)
-    {
-      entry.PartitionKey = DateOnly.FromDateTime(DateTime.Now).ToString("O"); // DateTimeOffset.UtcNow.ToUnixTimeSeconds()
-      entry.RowKey = id;
+    List<TableTransactionAction> addEntityBatch = new List<TableTransactionAction>();
 
-      await tableClient.AddEntityAsync(entry);
-    }
+    addEntityBatch.AddRange(entities.Select(f => new TableTransactionAction(TableTransactionActionType.Add, new Entry
+    {
+      PartitionKey = DateOnly.FromDateTime(DateTime.Now).ToString("O"), // DateTimeOffset.UtcNow.ToUnixTimeSeconds()
+      RowKey = id,
+      API = f.API,
+      Link = f.Link
+    })));
+
+    Response<IReadOnlyList<Response>> response = await tableClient.SubmitTransactionAsync(addEntityBatch);
 
     return true;
   }
