@@ -53,7 +53,8 @@ public class StorageService : IStorageService
       Description = "test",
       Category = "abc",
       Auth = "none",
-      Cors = "*"
+      Cors = "*",
+      HTTPS = true
     })));
 
     Response<IReadOnlyList<Response>> response = await tableClient.SubmitTransactionAsync(addEntityBatch);
