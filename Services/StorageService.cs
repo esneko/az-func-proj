@@ -48,8 +48,13 @@ public class StorageService : IStorageService
     {
       PartitionKey = DateOnly.FromDateTime(DateTime.Now).ToString("O"), // DateTimeOffset.UtcNow.ToUnixTimeSeconds()
       RowKey = id,
-      API = f.API,
-      Link = f.Link
+      API = 'public',
+      Link = 'www',
+      Description = 'test',
+      Category = 'abc',
+      Auth = 'none',
+      Cors = '*',
+      HTTPS = true
     })));
 
     Response<IReadOnlyList<Response>> response = await tableClient.SubmitTransactionAsync(addEntityBatch);
