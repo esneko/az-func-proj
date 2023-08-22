@@ -3,7 +3,7 @@ name: Build and deploy .NET Core project to Azure Function App
 on:
   push:
     branches:
-      - master
+      - dev
   workflow_dispatch:
 
 env:
