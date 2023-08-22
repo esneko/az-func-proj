@@ -38,7 +38,7 @@ public class StorageService : IStorageService
     return true;
   }
 
-  public async Task<bool> AddEntities<T>(string id, List<T> entities) where T : class, ITableEntity
+  public async Task<bool> AddEntities(string id, List<Entry> entities)
   {
     var tableClient = new TableClient(_connectionString, _tableName);
 
