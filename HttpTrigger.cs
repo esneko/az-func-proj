@@ -35,10 +35,12 @@ public class HttpTrigger
 
         var response = req.CreateResponse(HttpStatusCode.OK);
 
-        string partitionKey = req.Query["pk"];
-        if (!string.IsNullOrEmpty(partitionKey))
+        // string partitionKey = req.Query["pk"];
+        string startDate = req.Query["from"];
+        string endDate = req.Query["to"];
+        if (!string.IsNullOrEmpty(startDate) && !string.IsNullOrEmpty(endDate))
         {
-            var entities = await _storage.ListEntities<Entity>($"PartitionKey eq '{partitionKey}'");
+            var entities = await _storage.ListEntities<Entity>($"Timestamp ge datetime'{startDate}' and Timestamp le datetime'{endDate}'"); // PartitionKey eq '{partitionKey}'
             var data = JsonSerializer.Serialize<List<Entity>>(entities);
 
             response.Headers.Add("Content-Type", "text/json; charset=utf-8");
@@ -50,7 +52,7 @@ public class HttpTrigger
         string id = req.Query["id"];
 
         response.Headers.Add("Content-Type", "text/html; charset=utf-8");
-        response.WriteString($"Todo: fetch the blob with id: {id}");
+        response.WriteString($"Fetch the blob with id: {id}");
 
         return response;
     }
